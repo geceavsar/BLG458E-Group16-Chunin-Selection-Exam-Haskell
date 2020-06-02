@@ -9,8 +9,19 @@ import System.Exit (exitSuccess)
 data Ninja=Ninja{name::String,country::Char,score::Float,
 status::String,exam1::Float,
 exam2::Float,ability1::String,
-ability2::String,r::Int}
+ability2::String,r::Int} deriving (Eq,Show)
 
+--functions
+data Function = OneCountryNinjas | AllCountriesNinjas | MakeRoundNinjas |MakeRoundCountries |Exit deriving Show
+--choose a function
+pickFunction::String->IO()
+pickFunction f=case f of 
+    "a"->OneCountryNinjas
+	"b"->AllCountriesNinjas
+	"c"->MakeRoundNinjas
+	"d"->MakeRoundCountries
+	"e"->Exit
+	
 --country list
 fire::[Ninja]
 fire=[]
@@ -22,21 +33,19 @@ wind::[Ninja]
 wind=[]
 earth::[Ninja]
 earth=[]
-
 ninjaStr::[String]
 ninjaStr=[]
 
-ninjas::[Ninja]
-ninjas=[]
 
 --prints the initial list
 --this function also splits data line by line and store it in list 
-main::String->IO()
-main filename=do
- contents<-readFile filename
+main=do
+ contents<-readFile "csereport.txt"
  let listofNinjas = lines contents
      ninjaStr = zipWith (\n line -> show line) [0..] listofNinjas
- menu  
+ putStrLn $ unlines ninjaStr
+ menu
+
  
  --putStrLn "These are my ninjas:"
  --putStrLn $ unlines ninjaStr
@@ -46,24 +55,25 @@ menu::IO()
 menu=do
  putStr  "a)View a Country's Ninja Information\nb)View All Countries' Ninja Information\nc)Make Round Between Ninjas\nd)Make Round Between Countries\ne)Exit\nEnter the action: \n"
 
+--abilities as score equivalents
+abilityToPoint::String->Float
+abilityToPoint str
+ |str=="Clone" = 20
+ |str=="Hit" = 10
+ |str=="Lightning" = 50
+ |str=="Vision" = 30
+ |str=="Sand" = 50
+ |str=="Fire" = 40
+ |str=="Water" = 30
+ |str=="Blade" = 20
+ |str=="Summon" = 50
+ |str=="Storm" = 10
+ |str=="Rock" = 20
+ |otherwise=0
 
+--this is a higher order function cause it returns a function as result
+getScore::Float->Float->String->String->Float
+getScore e1 e2 a1 a2 = 0.5*e1 + 0.3*e2 + abilityToPoint a1 + abilityToPoint a2
  
-oneCountryNinjas::IO()
-oneCountryNinjas = do
- c<-getChar
- if c=='e' || c=='E' then putStrLn $ unlines earth
- else if c=='l' || c=='L' then putStrLn $ unlines ligthning
- else if c=='w' || c=='W' then putStrLn $ unlines water
- else if c=='n' || c=='N' then putStrLn $ unlines wind
- else if c=='f' || c=='F' then putStrLn $ unlines fire
- 
-
-
-
-
-
-
-
-
 
 
