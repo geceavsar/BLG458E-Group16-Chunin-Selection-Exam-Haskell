@@ -10,18 +10,6 @@ data Ninja=Ninja{name::String,country::Char,score::Float,
 status::String,exam1::Float,
 exam2::Float,ability1::String,
 ability2::String,r::Int} deriving (Eq,Show)
-
---functions
-data Function = OneCountryNinjas | AllCountriesNinjas | MakeRoundNinjas |MakeRoundCountries |Exit deriving Show
---choose a function
-pickFunction::String->IO()
-pickFunction f=case f of 
-    "a"->OneCountryNinjas
-	"b"->AllCountriesNinjas
-	"c"->MakeRoundNinjas
-	"d"->MakeRoundCountries
-	"e"->Exit
-	
 --country list
 fire::[Ninja]
 fire=[]
@@ -36,7 +24,16 @@ earth=[]
 ninjaStr::[String]
 ninjaStr=[]
 
-
+--functions
+data Function = OneCountryNinjas | AllCountriesNinjas | MakeRoundNinjas |MakeRoundCountries |Exit deriving Show
+--choose a function
+pickFunction::String->Function
+pickFunction f=case f of 
+    "a"->OneCountryNinjas
+    "b"->AllCountriesNinjas
+    "c"->MakeRoundNinjas
+    "d"->MakeRoundCountries
+    "e"->Exit
 --prints the initial list
 --this function also splits data line by line and store it in list 
 main=do
@@ -44,9 +41,7 @@ main=do
  let listofNinjas = lines contents
      ninjaStr = zipWith (\n line -> show line) [0..] listofNinjas
  putStrLn $ unlines ninjaStr
- menu
-
- 
+ menu 
  --putStrLn "These are my ninjas:"
  --putStrLn $ unlines ninjaStr
 
@@ -54,7 +49,24 @@ main=do
 menu::IO()
 menu=do
  putStr  "a)View a Country's Ninja Information\nb)View All Countries' Ninja Information\nc)Make Round Between Ninjas\nd)Make Round Between Countries\ne)Exit\nEnter the action: \n"
+ do 
+  choise<-getLine
+  let c=pickFunction choise
+  case c of
+   OneCountryNinjas->oneCountryNinjas
+  --AllCountriesNinjas->do
+  -- MakeRoundNinjas->do
+  --MakeRoundCountries->do
+   Exit->exit
+exit::IO()
+exit=do
+ putStrLn "Final List:"
+ putStrLn $ unlines ninjaStr
+ return()
 
+oneCountryNinjas::IO()
+oneCountryNinjas=do
+ putStrLn "Enter the country code: "
 --abilities as score equivalents
 abilityToPoint::String->Float
 abilityToPoint str
