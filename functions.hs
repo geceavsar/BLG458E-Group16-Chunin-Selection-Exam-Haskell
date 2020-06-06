@@ -1,8 +1,10 @@
 import System.IO 
 import System.Environment
 import System.Directory  
+import System.Random
 import Data.List  
 import Data.Char
+
 
 data Ninja=Ninja{name::String,country::Char,score::Float,
 status::String,exam1::Float,
@@ -77,21 +79,11 @@ round :: Ninja -> Ninja -> (Ninja,Ninja)
 round ninja1 ninja2 (winner,loser)
 	| score ninja1 > score ninja2 = (ninja1, ninja2)
 	| score ninja1 < score ninja2 = (ninja2, ninja1)
-	--otherwise = (| ability1)
+	| otherwise = (if ability1 ninja1 + ability2 ninja1 > ability1 ninja2 + ability2 ninja2 then (ninja1, ninja2) 
+        else {-if ability1 ninja1 + ability2 ninja1 < ability1 ninja2 + ability2 ninja2 then-} (ninja2, ninja1))
+        {-else (if number == 0 then 
+            (ninja1,ninja2) else (ninja2,ninja1) where number :: IO Int
+                    number = getStdRandom (randomR (0,1)) )-}
 
---group name changed
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+--manipulateList :: [Ninja] 
 
