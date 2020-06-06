@@ -41,6 +41,7 @@ water=[]
 earth::[Ninja]
 earth=[]
 
+
 checkIfValid :: String -> Char -> Bool
 checkIfValid nm cnt = result where 
     result = length secondList /= 0
@@ -71,7 +72,12 @@ deleteLoser loser
 	| country loser == 'l' =  filter(\n -> name n /= name loser) lightning
 	| country loser == 'n' =  filter(\n -> name n /= name loser) wind
 
- 
+
+round :: Ninja -> Ninja -> (Ninja,Ninja)
+round ninja1 ninja2 (winner,loser)
+	| score ninja1 > score ninja2 = (ninja1, ninja2)
+	| score ninja1 < score ninja2 = (ninja2, ninja1)
+	--otherwise = (| ability1)
 
 
 
