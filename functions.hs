@@ -63,5 +63,29 @@ updateScoreHelper winner country = result where
 
 --updateScore naruto
 
+deleteLoser :: Ninja -> [Ninja]
+deleteLoser loser
+	| country loser == 'f' =  filter(\n -> name n /= name loser) fire 
+	| country loser == 'e' =  filter(\n -> name n /= name loser) earth 
+	| country loser == 'w' =  filter(\n -> name n /= name loser) water
+	| country loser == 'l' =  filter(\n -> name n /= name loser) lightning
+	| country loser == 'n' =  filter(\n -> name n /= name loser) wind
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
