@@ -74,6 +74,8 @@ deleteLoser loser
  | country loser == 'l' =  filter(\n -> name n /= name loser) lightning
  | country loser == 'n' =  filter(\n -> name n /= name loser) wind
 
+--randomNum :: IO Int
+--randomNum = getStdRandom (randomR (0,1))
 
 fight :: Ninja -> Ninja -> (Ninja,Ninja)
 fight ninja1 ninja2 
@@ -81,13 +83,6 @@ fight ninja1 ninja2
 	| score ninja1 < score ninja2 = (ninja2, ninja1)
 	| otherwise = (if ability1 ninja1 + ability2 ninja1 > ability1 ninja2 + ability2 ninja2 then (ninja1, ninja2) 
         else if ability1 ninja1 + ability2 ninja1 < ability1 ninja2 + ability2 ninja2 then (ninja2, ninja1)
-        else (if number == 0 then 
-            (ninja1,ninja2) else (ninja2,ninja1)	where 
-				number :: IO Int
-				number = getStdRandom (randomR (0,1)) ))
+        else (if getStdRandom (randomR (0,1)) == 0 then (ninja1,ninja2) else (ninja2,ninja1)))
 
-
-
-
---manipulateList :: [Ninja] 
 
