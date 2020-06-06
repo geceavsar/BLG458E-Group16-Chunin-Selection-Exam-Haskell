@@ -24,7 +24,7 @@ earth=[]
 ninjaStr::[String]
 ninjaStr=[]
 
---functions
+--functions//algebraic data types
 data Function = OneCountryNinjas | AllCountriesNinjas | MakeRoundNinjas |MakeRoundCountries |Exit deriving Show
 --choose a function
 pickFunction::String->Function
@@ -34,6 +34,7 @@ pickFunction f=case f of
     "c"->MakeRoundNinjas
     "d"->MakeRoundCountries
     "e"->Exit
+
 --prints the initial list
 --this function also splits data line by line and store it in list 
 main=do
@@ -45,7 +46,6 @@ main=do
  --putStrLn "These are my ninjas:"
  --putStrLn $ unlines ninjaStr
 
---to exit exitSuccess will be used
 menu::IO()
 menu=do
  putStr  "a)View a Country's Ninja Information\nb)View All Countries' Ninja Information\nc)Make Round Between Ninjas\nd)Make Round Between Countries\ne)Exit\nEnter the action: \n"
@@ -55,18 +55,34 @@ menu=do
   case c of
    OneCountryNinjas->oneCountryNinjas
   --AllCountriesNinjas->do
-  -- MakeRoundNinjas->do
+  --MakeRoundNinjas->do
   --MakeRoundCountries->do
    Exit->exit
+
 exit::IO()
 exit=do
  putStrLn "Final List:"
  putStrLn $ unlines ninjaStr
  return()
-
+ 
+--in this function user enters a counrty code and required countrys' ninjas printed
 oneCountryNinjas::IO()
 oneCountryNinjas=do
  putStrLn "Enter the country code: "
+ do
+  code<-getLine
+  case code of
+   "e"->print earth
+   "E"->print earth
+   "l"->print ligthning
+   "L"->print ligthning
+   "w"->print water
+   "W"->print water
+   "n"->print wind
+   "N"->print wind
+   "f"->print fire
+   "F"->print fire
+   
 --abilities as score equivalents
 abilityToPoint::String->Float
 abilityToPoint str
@@ -86,6 +102,5 @@ abilityToPoint str
 --this is a higher order function cause it returns a function as result
 getScore::Float->Float->String->String->Float
 getScore e1 e2 a1 a2 = 0.5*e1 + 0.3*e2 + abilityToPoint a1 + abilityToPoint a2
- 
 
 
