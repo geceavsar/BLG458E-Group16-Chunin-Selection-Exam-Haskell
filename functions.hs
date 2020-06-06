@@ -79,7 +79,7 @@ round ninja1 ninja2 (winner,loser)
 	| score ninja1 < score ninja2 = (ninja2, ninja1)
 	--otherwise = (| ability1)
 
-
+--group name changed
 
 
 
