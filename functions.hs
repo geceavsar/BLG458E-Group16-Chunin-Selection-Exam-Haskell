@@ -91,9 +91,14 @@ updateLists (winner,loser) = (winnerCountry, loserCountry) where
     loserCountry = deleteLoser loser
 
 
+
 sortNinjas :: [Ninja] -> [Ninja]
 sortNinjas country = result where
-    groupedByRound = groupBy (\n1 n2 -> r n1 == r n2) country
+    --groupedByRound = groupBy (\n1 n2 -> r n1 == r n2) country
+    -- groupBy probably groups the items according to their places in the list. (first item is the first group)
+    -- sorting and grouping afterwards may be a safer solution
+    groupedByRound = groupBy (\n1 n2 -> r n1 == r n2) $ reverse $ sortBy (\n1 n2 -> r n1 `compare` r n2) country
+    -- sort the scores in ascending order inside each group
     result = concat $ sortEachRound groupedByRound where
         sortEachRound :: [[Ninja]] -> [[Ninja]]
         sortEachRound [] = []
