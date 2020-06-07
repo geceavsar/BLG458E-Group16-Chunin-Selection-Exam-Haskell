@@ -43,7 +43,6 @@ water=[]
 earth::[Ninja]
 earth=[]
 
-
 checkIfValid :: String -> Char -> Bool
 checkIfValid nm cnt = result where 
     result = length secondList /= 0
@@ -56,15 +55,14 @@ updateScore winner
     | country winner == 'e' = updateScoreHelper winner earth 
     | country winner == 'w' = updateScoreHelper winner water
     | country winner == 'l' = updateScoreHelper winner lightning 
-    | country winner == 'n' = updateScoreHelper winner wind
+    | country winner == 'n' = updateScoreHelper winner wind where
+        updateScoreHelper :: Ninja -> [Ninja] -> [Ninja]
+        updateScoreHelper winner country = result where
+            result = [newNinja] ++ filter(\n -> name n /= name winner) country
+            newNinja = 
+                if r winner == 2 then winner{score = score winner + 10, r = r winner + 1, status = "Journeyman"} 
+                else winner{score = score winner + 10, r = r winner + 1}
 
-
-updateScoreHelper :: Ninja -> [Ninja] -> [Ninja]
-updateScoreHelper winner country = result where
-    result = [newNinja] ++ filter(\n -> name n /= name winner) country
-    newNinja = winner { score = score winner + 10}
-
---updateScore naruto
 
 deleteLoser :: Ninja -> [Ninja]
 deleteLoser loser
@@ -85,10 +83,36 @@ fight ninja1 ninja2
         else if ability1 ninja1 + ability2 ninja1 < ability1 ninja2 + ability2 ninja2 then (ninja2, ninja1)
         else (if  1 == 0 then (ninja1, ninja2) else (ninja2, ninja1)))
 
---getStdRandom (randomR (0,1))
 
 countryFight :: [Ninja] -> [Ninja] -> (Ninja,Ninja)
-fight country1 country2 = result where
-    result = fight head country1 head country2
+countryFight country1 country2 = result where
+    result = head country1 `fight` head country2
 
-updateLists :: (Ninja, Ninja) -> 
+updateLists :: (Ninja, Ninja) -> ([Ninja], [Ninja])
+updateLists (winner,loser) = (winnerCountry, loserCountry) where
+    winnerCountry = updateScore winner
+    loserCountry = deleteLoser loser
+
+-- doesnt work properly!!!!!!
+sortNinjas :: [Ninja] -> [Ninja]
+sortNinjas country = result where
+    result = sortBy (\n1 n2 -> score n1 `compare` score n2) groupedByRank
+    groupedByRank = concat groups
+    groups = groupBy (\n1 n2 -> r n1 == r n2) country
+
+
+isThereAnyJourneyman :: [Ninja] -> Bool
+isThereAnyJourneyman country = result where
+    result = length journeymanList /= 0
+    journeymanList = filter(\n -> status n == "Journeyman") country
+
+--test commands
+result = fight naruto gaara
+newLists = updateLists result
+
+winList = fst newLists
+lsList = snd newLists
+
+winListSorted = sortNinjas winList
+lsListSorted = sortNinjas lsList
+      
