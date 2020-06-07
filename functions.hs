@@ -94,25 +94,23 @@ updateLists (winner,loser) = (winnerCountry, loserCountry) where
     loserCountry = deleteLoser loser
 
 -- doesnt work properly!!!!!!
+-- need to group them in descending order
+-- is sortBy stable??????
 sortNinjas :: [Ninja] -> [Ninja]
 sortNinjas country = result where
     result = sortBy (\n1 n2 -> score n1 `compare` score n2) groupedByRank
-    groupedByRank = concat groups
-    groups = groupBy (\n1 n2 -> r n1 == r n2) country
+    groupedByRank = concat $ groupBy (\n1 n2 -> r n1 == r n2) country
 
 
 isThereAnyJourneyman :: [Ninja] -> Bool
 isThereAnyJourneyman country = result where
-    result = length journeymanList /= 0
-    journeymanList = filter(\n -> status n == "Journeyman") country
+    result = (length $ filter(\n -> status n == "Journeyman") country) /= 0
 
 --test commands
-result = fight naruto gaara
-newLists = updateLists result
+--result = fight naruto gaara
+--newLists = updateLists result
 
-winList = fst newLists
-lsList = snd newLists
-
-winListSorted = sortNinjas winList
-lsListSorted = sortNinjas lsList
+newLists = updateLists $ fight naruto gaara
+winListSorted = sortNinjas $ fst newLists
+lsListSorted = sortNinjas $ snd newLists
       
