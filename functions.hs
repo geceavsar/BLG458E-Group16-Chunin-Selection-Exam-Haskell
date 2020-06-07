@@ -72,34 +72,32 @@ deleteLoser loser
     | country loser == 'l' =  filter(\n -> name n /= name loser) lightning
     | country loser == 'n' =  filter(\n -> name n /= name loser) wind
 
---randomNum :: IO Int
---randomNum = getStdRandom (randomR (0,1))
-
 fight :: Ninja -> Ninja -> (Ninja,Ninja)
 fight ninja1 ninja2 
     | score ninja1 > score ninja2 = (ninja1, ninja2)
     | score ninja1 < score ninja2 = (ninja2, ninja1)
-    | otherwise = (if ability1 ninja1 + ability2 ninja1 > ability1 ninja2 + ability2 ninja2 then (ninja1, ninja2) 
-        else if ability1 ninja1 + ability2 ninja1 < ability1 ninja2 + ability2 ninja2 then (ninja2, ninja1)
-        else (if  1 == 0 then (ninja1, ninja2) else (ninja2, ninja1)))
+    | otherwise = (if ability1 ninja1 + ability2 ninja1 >= ability1 ninja2 + ability2 ninja2 then (ninja1, ninja2) else (ninja2, ninja1))
 
 
+-- higher order function???????
 countryFight :: [Ninja] -> [Ninja] -> (Ninja,Ninja)
 countryFight country1 country2 = result where
     result = head country1 `fight` head country2
 
+--higher order
 updateLists :: (Ninja, Ninja) -> ([Ninja], [Ninja])
 updateLists (winner,loser) = (winnerCountry, loserCountry) where
     winnerCountry = updateScore winner
     loserCountry = deleteLoser loser
 
--- doesnt work properly!!!!!!
--- need to group them in descending order
--- is sortBy stable??????
+
 sortNinjas :: [Ninja] -> [Ninja]
 sortNinjas country = result where
-    result = sortBy (\n1 n2 -> score n1 `compare` score n2) groupedByRank
-    groupedByRank = concat $ groupBy (\n1 n2 -> r n1 == r n2) country
+    groupedByRound = groupBy (\n1 n2 -> r n1 == r n2) country
+    result = concat $ sortEachRound groupedByRound where
+        sortEachRound :: [[Ninja]] -> [[Ninja]]
+        sortEachRound [] = []
+        sortEachRound (x:xs) = (sortBy (\n1 n2 -> score n1 `compare` score n2) x : sortEachRound xs)
 
 
 isThereAnyJourneyman :: [Ninja] -> Bool
