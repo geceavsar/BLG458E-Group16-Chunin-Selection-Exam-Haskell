@@ -22,10 +22,10 @@ wind::[Ninja]
 wind=[]
 earth::[Ninja]
 earth=[]
-ninjaStr::[String]
-ninjaStr=[]
-ninjas::[Ninja]
-ninjas=[]
+--ninjaStr::[String]
+--ninjaStr=[]
+--ninjas::[Ninja]
+--ninjas=[]
 
 
 --functions//algebraic data types
@@ -45,39 +45,56 @@ pickFunction f=case f of
 main=do
  contents<-readFile "csereport.txt"
  let listofNinjas = lines contents
---     ninjaStr = zipWith (\n line -> show line) [0..] listofNinjas     
- --print (takeWords(head listofNinjas))
- --print listofNinjas
- print (words (head listofNinjas))
+ --getNinjaFromString . words
+ let ninjas = parseNinjas listofNinjas
+ print (ninjas)
+	
+-- print (words (head listofNinjas))
+ {-getNinja :: IO String
+ getNinja = do line <- listofNinjas
+					return (read line :: String)-}
+
+ 
+ --let read (words (head listofNinjas)) :: String
  menu 
- --putStrLn "These are my ninjas:"
- --putStrLn $ unlines ninjaStr
- 
-{-isSpace:: [Char] -> [String]
-isSpace (x:xs)
- |null x = []
- |isSpace x /= true = 
- |otherwise=  ++ isSpace (tail str)-}
- 
-takeWords :: [Char] -> [Char]
-takeWords = takeWhile (' ' /=)
- 
-takeWord :: [Char] -> [Char]
-takeWord [] = []
-takeWord (x:xs) 
-    | x == ' ' = []
-    | otherwise = x : takeWord xs
---convert2Ninja::[String]->[Ninja]
---convert2Ninja ninjaStr
--- |null  ninjaStr= []
--- |otherwise = myparser ninjaStr
--- where
---  myparser::[String]->[Ninja]
---  myparser s = map(Ninja take 2 s getScore drop 2 s "Junior" drop 2 s 0.0)
--- map(Ninja s !! 0 s !! 1 getScore (toFloat s !! 2) (toFloat s !! 3) s !! 4 s !! 5 "Junior" (read (s !! 2)::Float) (toFloat s !! 3) s !! 4 s !! 5 0.0)
+
+{-
+content <- readFile (head args) -- get first arg as the file name, read all file to contents
+            let linesOfNinjas = lines content -- split contents line by line
+            
+            let ninjas = parseNinjas linesOfNinjas
+------burada okuma yapıyor
+-}
+
+parseNinjas :: [String] -> [Ninja] -- Get Ninjas from given String array
+parseNinjas [] = []
+parseNinjas (x:xs) = (scoreUpdate . getNinjaFromString . words) x : parseNinjas(xs)  
+
+
+getNinjaFromString :: [String] -> Ninja
+getNinjaFromString line = Ninja { -- Create a Ninja element with given String array, convert data types if necessary
+name = (line !! 0), -- Name is the first value in csereport
+country = (line !! 1), -- country is the second string, but Ninja data type only requires the first character
+exam1 = toFloat(line !! 2),  -- exam1 is the third string which is then converted to Float
+exam2 = toFloat(line !! 3), -- exam2 is the fourth string which is then converted to Float
+ability1 = (line !! 4), -- ability1 is the fifth string 
+ability2 = (line !! 5), -- ability2 is the sixth string 
+status = "Junior", -- Initial value is junior
+r = 0 , -- Initial round number is zero
+score = 0 -- Set score initially to zero (This is because we couldn't access the exam1 exam2 ability1 ability2 attributes of this object while creating)
+}
+
+  
+
+scoreUpdate :: Ninja -> Ninja
+scoreUpdate ninja = updatedNinja where
+	updatedNinja =  ninja {score = getScore (exam1 ninja) (exam2 ninja) (ability1 ninja) (ability2 ninja)} where 
+	    getScore::Float->Float->String->String->Float
+	    getScore e1 e2 a1 a2 = 0.5*e1 + 0.3*e2 + abilityToPoint a1 + abilityToPoint a2
 
 toFloat::String->Float
 toFloat s = read s::Float
+
 
 --print main menu
 menu::IO()
@@ -114,7 +131,7 @@ oneCountryNinjas=do
 exit::IO()
 exit=do
  putStrLn "Final List:"
- putStrLn $ unlines ninjaStr
+ --putStrLn $ unlines ninjaStr
  return()
    
 --abilities as score equivalents
@@ -134,7 +151,18 @@ abilityToPoint str
  |otherwise=0
 
 --this is a higher order function cause it returns a function as result
-getScore::Float->Float->String->String->Float
-getScore e1 e2 a1 a2 = 0.5*e1 + 0.3*e2 + abilityToPoint a1 + abilityToPoint a2
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
