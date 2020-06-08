@@ -27,6 +27,7 @@ ninjaStr=[]
 ninjas::[Ninja]
 ninjas=[]
 
+
 --functions//algebraic data types
 data Function = OneCountryNinjas | AllCountriesNinjas | MakeRoundNinjas |MakeRoundCountries |Exit deriving Show
 
@@ -44,19 +45,36 @@ pickFunction f=case f of
 main=do
  contents<-readFile "csereport.txt"
  let listofNinjas = lines contents
-     ninjaStr = zipWith (\n line -> show line) [0..] listofNinjas     
- putStrLn $ unlines ninjaStr
+--     ninjaStr = zipWith (\n line -> show line) [0..] listofNinjas     
+ --print (takeWords(head listofNinjas))
+ --print listofNinjas
+ print (words (head listofNinjas))
  menu 
  --putStrLn "These are my ninjas:"
  --putStrLn $ unlines ninjaStr
  
-convert2Ninja::[String]->[Ninja]
-convert2Ninja ninjaStr
- |null  ninjaStr= []
- |otherwise = myparser (head ninjaStr)
- where
-  myparser::[String]->[Ninja]
-  myparser s = Ninja s !! 0 s !! 1 getScore (toFloat s !! 2) (toFloat s !! 3) s !! 4 s !! 5 "Junior" (read (s !! 2)::Float) (toFloat s !! 3) s !! 4 s !! 5 0.0) ++ ninjas
+{-isSpace:: [Char] -> [String]
+isSpace (x:xs)
+ |null x = []
+ |isSpace x /= true = 
+ |otherwise=  ++ isSpace (tail str)-}
+ 
+takeWords :: [Char] -> [Char]
+takeWords = takeWhile (' ' /=)
+ 
+takeWord :: [Char] -> [Char]
+takeWord [] = []
+takeWord (x:xs) 
+    | x == ' ' = []
+    | otherwise = x : takeWord xs
+--convert2Ninja::[String]->[Ninja]
+--convert2Ninja ninjaStr
+-- |null  ninjaStr= []
+-- |otherwise = myparser ninjaStr
+-- where
+--  myparser::[String]->[Ninja]
+--  myparser s = map(Ninja take 2 s getScore drop 2 s "Junior" drop 2 s 0.0)
+-- map(Ninja s !! 0 s !! 1 getScore (toFloat s !! 2) (toFloat s !! 3) s !! 4 s !! 5 "Junior" (read (s !! 2)::Float) (toFloat s !! 3) s !! 4 s !! 5 0.0)
 
 toFloat::String->Float
 toFloat s = read s::Float
