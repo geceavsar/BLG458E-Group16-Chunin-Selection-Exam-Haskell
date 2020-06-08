@@ -29,7 +29,7 @@ temari=Ninja{name="Temari", country='n', status="Junior", exam1=40, exam2=60, ab
 ninjas = [naruto, sasuke, gaara, temari]
  
 fire::[Ninja]
-fire = [ n | n <- ninjas, country n == 'f']
+fire = [ n | n <- ninjas, country n == 'f']
 
 
 wind::[Ninja]
@@ -90,7 +90,27 @@ updateLists (winner,loser) = (winnerCountry, loserCountry) where
     winnerCountry = updateScore winner
     loserCountry = deleteLoser loser
 
+descendingRound :: (Ord a) => a -> a -> Ordering
+descendingRound firstNinja secondNinja
+    | r firstNinja < r secondList = GT
+    | r firstNinja > r secondNinja = LT
+    | otherwise = EQ
 
+ascendingScore :: (Ord a) => a -> a -> Ordering
+ascendingScore firstNinja secondNinja
+    | score firstNinja < score secondList = LT
+    | score firstNinja > score secondNinja = GT
+    | otherwise = EQ
+
+groupBy' :: [Ninja] -> [[Ninja]]
+groupBy' [] = [[]]
+groupBy' (x:xs) = takeWhile(\n -> r n == r x) xs : groupBy' $ dropWhile(\n -> r n == r x)
+
+qsort :: (Ord a) => [a] -> [a]
+qsort [] = []
+qsort (x:xs) = qsort smaller ++ [x] ++ qsort larger where
+    smaller = filter (<x) xs
+    larger = filter (>=x) xs
 
 sortNinjas :: [Ninja] -> [Ninja]
 sortNinjas country = result where
@@ -116,4 +136,3 @@ isThereAnyJourneyman country = result where
 newLists = updateLists $ fight naruto gaara
 winListSorted = sortNinjas $ fst newLists
 lsListSorted = sortNinjas $ snd newLists
-      
