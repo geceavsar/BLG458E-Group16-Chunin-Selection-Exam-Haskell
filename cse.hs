@@ -13,7 +13,7 @@ exam2::Float,ability1::String,
 ability2::String,r::Int} deriving (Eq,Show)
 
 --functions as algebraic data types
-data Function = OneCountryNinjas | AllCountriesNinjas | MakeRoundNinjas |MakeRoundCountries |Exit deriving Show
+data Function = OneCountryNinjas | AllCountriesNinjas | MakeRoundNinjas |MakeRoundCountries |Exit | InvalidOption deriving Show
 
 -------main function
 main=do
@@ -96,6 +96,9 @@ menu countryList=do
    Exit-> do let printList =  [ n | n <- sortNinjas $ concat countryList, status n == "Journeyman" ]
              putStr $ printNinjaList printList
              return ()
+   InvalidOption-> do
+                    putStrLn "Invalid option"
+                    menu countryList
 
 -- this function turns each menu option into function names
 pickFunction::String->Function
@@ -105,6 +108,7 @@ pickFunction f=case f of
     "c"->MakeRoundNinjas
     "d"->MakeRoundCountries
     "e"->Exit
+    _->InvalidOption
 
 -- this function checks if the given ninja and country code pairs do exist
 checkIfValid :: [[Ninja]] -> String -> String -> Bool
@@ -164,12 +168,6 @@ scoreUpdate ninja = updatedNinja where
 --convert type string to type float
 toFloat::String->Float
 toFloat s = read s::Float
-
-{-floatToString :: Float -> String
-floatToString f = read f::String
-
-intToString :: Int -> String
-intToString i = read i::String-}
 
 --in this function user enters a country code and that country's ninjas are printed
 oneCountryNinjas::[[Ninja]]->IO()
@@ -245,7 +243,7 @@ isThereAnyJourneyman country = result where
 
 -- this function prints the ninja lists
 printNinjaList :: [Ninja] -> String
-printNinjaList [] = ""
+printNinjaList [] = "\n"
 printNinjaList(x:xs) = name x ++ ", Score: " ++ (show . score) x ++ ", Status: " ++ status x ++ ", Round: " ++ (show . r) x ++ "\n" ++ printNinjaList xs
 
 
