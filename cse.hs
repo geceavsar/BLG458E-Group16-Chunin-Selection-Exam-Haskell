@@ -73,7 +73,7 @@ menu countryList=do
                                     putStrLn "Names or countries of the ninjas do not match. Try again."
                                     menu countryList
    MakeRoundCountries->do
-                        putStrLn "Enter the second country code."
+                        putStrLn "Enter the first country code."
                         countryCode1 <- getLine
                         putStrLn "Enter the second country code."
                         countryCode2 <- getLine
@@ -91,8 +91,8 @@ menu countryList=do
                                     menu countryList
 
        
-   Exit-> do let printList =  printNinjaList $ sortNinjas $ concat countryList
-             putStr printList
+   Exit-> do let printList =  [ n | n <- sortNinjas $ concat countryList, status n == "Journeyman" ]
+             putStr $ printNinjaList printList
              return ()
 
 -- this function turns each menu option into function names
@@ -176,16 +176,17 @@ oneCountryNinjas ninjas=do
  do
   code<-getLine
   case code of
-   "e"->putStr $ printNinjaList $ ninjas !! 0
-   "E"->putStr $ printNinjaList $ ninjas !! 0
-   "l"->putStr $ printNinjaList $ ninjas !! 1
-   "L"->putStr $ printNinjaList $ ninjas !! 1
-   "w"->putStr $ printNinjaList $ ninjas !! 2
-   "W"->putStr $ printNinjaList $ ninjas !! 2
-   "n"->putStr $ printNinjaList $ ninjas !! 3
-   "N"->putStr $ printNinjaList $ ninjas !! 3
-   "f"->putStr $ printNinjaList $ ninjas !! 4
-   "F"->putStr $ printNinjaList $ ninjas !! 4
+   "e"->putStr $ printNinjaList $ sortNinjas $ ninjas !! 0
+   "E"->putStr $ printNinjaList $ sortNinjas $ ninjas !! 0
+   "l"->putStr $ printNinjaList $ sortNinjas $ ninjas !! 1
+   "L"->putStr $ printNinjaList $ sortNinjas $ ninjas !! 1
+   "w"->putStr $ printNinjaList $ sortNinjas $ ninjas !! 2
+   "W"->putStr $ printNinjaList $ sortNinjas $ ninjas !! 2
+   "n"->putStr $ printNinjaList $ sortNinjas $ ninjas !! 3
+   "N"->putStr $ printNinjaList $ sortNinjas $ ninjas !! 3
+   "f"->putStr $ printNinjaList $ sortNinjas $ ninjas !! 4
+   "F"->putStr $ printNinjaList $ sortNinjas $ ninjas !! 4
+   _->putStrLn "Country code is invalid."
 
 -- this function turns the country codes into the actual countries
 countryCodeToCountry :: String -> String
@@ -227,17 +228,17 @@ abilityToPoint str
 -- this function sorts the ninjas with respect to their rounds and scores
 sortNinjas :: [Ninja] -> [Ninja]
 sortNinjas country = result where
-    groupedByRound = groupBy (\x y -> r x == r y) $ reverse $ sortBy (\x y -> r x `compare` r y) country
+    groupedByRound = groupBy (\x y -> r x == r y) $ sortBy (\x y -> r x `compare` r y) country
     -- sort the scores in ascending order inside each group
     result = concat $ sortEachRound groupedByRound where
         sortEachRound :: [[Ninja]] -> [[Ninja]]
         sortEachRound [] = []
-        sortEachRound (x:xs) = (sortBy (\x y -> score x `compare` score y) x : sortEachRound xs)
+        sortEachRound (x:xs) = (reverse $ sortBy (\x y -> score x `compare` score y) x) : sortEachRound xs
 
 -- this function checks if there is any journeyman in a country
 isThereAnyJourneyman :: [Ninja] -> Bool
 isThereAnyJourneyman country = result where
-    result = (length $ filter(\n -> status n == "Journeyman") country) /= 0
+    result = not $ null $ filter(\n -> status n == "Journeyman") country
 
 
 --exit function
