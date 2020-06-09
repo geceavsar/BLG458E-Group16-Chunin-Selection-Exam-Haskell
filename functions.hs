@@ -11,6 +11,8 @@ status::String,exam1::Float,
 exam2::Float,ability1::Float,
 ability2::Float,r::Int} deriving (Eq,Show)
 
+
+-- dummy dataset to test the functions
 ninjas::[Ninja]
 
 naruto::Ninja
@@ -27,6 +29,8 @@ temari=Ninja{name="Temari", country='n', status="Junior", exam1=40, exam2=60, ab
 
 
 ninjas = [naruto, sasuke, gaara, temari]
+
+-- country lists
  
 fire::[Ninja]
 fire = [ n | n <- ninjas, country n == 'f']
@@ -102,9 +106,18 @@ ascendingScore firstNinja secondNinja
     | score firstNinja > score secondNinja = GT
     | otherwise = EQ
 
-groupBy' :: [Ninja] -> [[Ninja]]
+{-groupBy' :: [Ninja] -> [[Ninja]]
 groupBy' [] = [[]]
-groupBy' (x:xs) = takeWhile(\n -> r n == r x) xs : groupBy' $ dropWhile(\n -> r n == r x)
+groupBy' (x:xs) = takeWhile(\n -> r n == r x) xs : groupBy' $ dropWhile(\n -> r n == r x) xs-}
+
+groupBy' :: (a -> a -> Bool) -> [a] -> [[a]]
+groupBy' _  [] =  []
+groupBy' roundsAreEqual (x:xs) =  (x:ys) : groupBy' roundsAreEqual zs where 
+    ys = takeWhile roundsAreEqual xs 
+    zs = dropWhile roundsAreEqual xs 
+
+roundsAreEqual :: Ninja -> Ninja -> Bool
+roundsAreEqual ninja1 ninja2 = r ninja1 == r ninja2
 
 qsort :: (Ord a) => [a] -> [a]
 qsort [] = []
@@ -117,12 +130,12 @@ sortNinjas country = result where
     --groupedByRound = groupBy (\n1 n2 -> r n1 == r n2) country
     -- groupBy probably groups the items according to their places in the list. (first item is the first group)
     -- sorting and grouping afterwards may be a safer solution
-    groupedByRound = groupBy (\n1 n2 -> r n1 == r n2) $ reverse $ sortBy (\n1 n2 -> r n1 `compare` r n2) country
+    groupedByRound = groupBy' roundsAreEqual $ reverse $ qsort descendingRound country
     -- sort the scores in ascending order inside each group
     result = concat $ sortEachRound groupedByRound where
         sortEachRound :: [[Ninja]] -> [[Ninja]]
         sortEachRound [] = []
-        sortEachRound (x:xs) = (sortBy (\n1 n2 -> score n1 `compare` score n2) x : sortEachRound xs)
+        sortEachRound (x:xs) = (qsort ascendingScore x : sortEachRound xs)
 
 
 isThereAnyJourneyman :: [Ninja] -> Bool
