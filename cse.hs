@@ -241,13 +241,7 @@ isThereAnyJourneyman country = result where
     result = not $ null $ filter(\n -> status n == "Journeyman") country
 
 
---exit function
-exit::IO()
-exit=do
- putStrLn "Final List:"
- --here we must print latest version of ninja list
- return()
-
+-- this function prints the ninja lists
 printNinjaList :: [Ninja] -> String
 printNinjaList [] = ""
 printNinjaList(x:xs) = name x ++ ", Score: " ++ (show . score) x ++ ", Status: " ++ status x ++ ", Round: " ++ (show . r) x ++ "\n" ++ printNinjaList xs
