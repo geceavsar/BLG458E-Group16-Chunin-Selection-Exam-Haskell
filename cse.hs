@@ -76,20 +76,37 @@ menu countryList=do
                                 do
                                     let ninja1 = (filter(\n -> name n == name1) (concat countryList)) !! 0
                                     let ninja2 = (filter(\n -> name n == name2) (concat countryList)) !! 0
-                                    menu $ Main.updateLists countryList $ Main.fight ninja1 ninja2
+									--let tuple = Main.fight ninja1 ninja2
+									--putStrLn $ read (fst tuple) :: String
+                                    menu $ Main.updateLists countryList $ Main.fight ninja1 ninja2						
                             else 
                                 do
                                     putStrLn "Names or countries of the ninjas do not match. Try again."
                                     menu countryList
-
+   {-MakeRoundCountries-> do 
+						putStrLn "Enter the country code of the first ninja."
+						countyCode1<-getLine
+						putStrLn "Enter the country code of the second ninja."
+						countryCode2 <- getLine
+						let country1 = countryCodeToIndex countryCode1
+                        let country2 = countryCodeToIndex countryCode2
+						if Main.countryCodeToIndex countryCode1 /= -1 && Main.countryCodeToIndex countryCode2 /= -1
+							then
+								do
+									--let tuple = Main.countryFight (countryList !! country1) (countryList !! country2)
+									--putStrLn $ read (fst tuple) :: String
+									menu $ Main.updateLists countryList $ Main.countryFight (countryList !! country1) (countryList !! country2)
+							else 
+                                do
+                                    putStrLn "Countries of the ninjas do not match. Try again."
+                                    menu countryList-}
        
-       --Main.makeRoundNinjas countryList 
-  --MakeRoundCountries->makeRoundCountries
-   Exit-> do print countryList
-             return ()
+	Exit-> do print countryList
+				   return ()
 
 --do let newCountryList=Main.makeRoundNinjas countryList
 --when user enters one of the strings below(a,b,c,d,e) related function will be called
+
 
 pickFunction::String->Function
 pickFunction f=case f of 
@@ -98,37 +115,10 @@ pickFunction f=case f of
     "c"->MakeRoundNinjas
     "d"->MakeRoundCountries
     "e"->Exit
-{-
-assignCountries::[Ninja]->[[Ninja]]
-assignCountries [] = []
-assignCountries (x:xs) = insert x : assignCountries (xs)
- where 
-  insert::Ninja->[Ninja]
-  insert ninja
-   |country ninja=="Earth" = ninja:earth 
-   |country ninja=="Fire" = ninja:fire 
-   |country ninja=="Lightning" = ninja:lightning 
-   |country ninja=="Water" = ninja:water 
-   |country ninja=="Wind" = ninja:wind-}
--- let earth=[n|n<-ninjas,country n=="Earth"]
-
-{---make round between ninjas
-makeRoundNinjas::[[Ninja]] -> IO()
-makeRoundNinjas countryList=do
- putStrLn "Enter the name of the first ninja: "
- name1<-getLine
- putStrLn "Enter the name of the second ninja: "
- name2<-getLine
--- if (checkIfValid name1 country1) && (checkIfValid name2 country2) 
-{- do
-  let tuple= fight ([n|n <- concat countryList, name n==name1])([n|n <- concat countryList, name n==name2])
- updateLists (countryList) (fst tuple)
- -}-}
-
 
 checkIfValid :: [[Ninja]] -> String -> String -> Bool
 checkIfValid ninjaList nm cnt = result where 
-    result = not null secondList
+    result = not $ null secondList
     secondList = filter(\n -> country n == cnt) firstList
     firstList = filter(\n -> name n == nm) (concat ninjaList)
 
@@ -159,6 +149,13 @@ updateLists countryList (winner,loser) = separateCountries winnerCountry where
 --deletes  the ninja who lost the current round
 deleteLoser :: [[Ninja]] -> Ninja -> [Ninja]
 deleteLoser countryList loser = filter(\n -> name n /= name loser) (concat countryList)
+
+
+--countryfight
+countryFight :: [Ninja] -> [Ninja] -> (Ninja,Ninja)
+countryFight country1 country2 = result where
+    result = head country1 `fight` head country2
+
 
 --string to ninja conversion
 convertToNinjas :: [String] -> [Ninja]
@@ -208,6 +205,17 @@ countryCodeToCountry code
     | code == "n" || code == "N" = "Wind"
     | code == "f" || code == "F" = "Fire"
     | otherwise = "Null"
+	
+	
+countryCodeToIndex :: String -> Int
+countryCodeToCountry code 
+    | code == "e" || code == "E" = 0
+    | code == "l" || code == "L" = 1
+    | code == "w" || code == "W" = 2
+    | code == "n" || code == "N" = 3
+    | code == "f" || code == "F" = 4
+    | otherwise = -1
+	
 
 --list is already sorted, so in this function we only print blindly
 {-allCountryNinjas::[[Ninja]]->IO String
@@ -236,17 +244,3 @@ abilityToPoint str
  |str=="Storm" = 10
  |str=="Rock" = 20
  |otherwise=0
-
-
-
-
-
-
-
-
-
-
-
-
-
-
