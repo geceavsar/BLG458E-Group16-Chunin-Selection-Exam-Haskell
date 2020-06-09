@@ -66,8 +66,9 @@ menu countryList=do
                                     let ninja1 = (filter(\n -> name n == name1) (concat countryList)) !! 0
                                     let ninja2 = (filter(\n -> name n == name2) (concat countryList)) !! 0
                                     let tuple = Main.fight ninja1 ninja2
-                                    putStr $ printNinjaList [fst tuple]
-                                    menu $ Main.updateLists countryList $ tuple
+                                    let newList = Main.updateLists countryList $ tuple
+                                    putStr $ printNinjaList $ filter (\n -> name n == name (fst tuple)) (concat newList)
+                                    menu newList
                             else 
                                 do
                                     putStrLn "Names or countries of the ninjas do not match. Try again."
@@ -83,8 +84,9 @@ menu countryList=do
                             then
                                 do
                                     let tuple = Main.countryFight (countryList !! country1) (countryList !! country2)
-                                    putStr $ printNinjaList [fst tuple] 
-                                    menu $ Main.updateLists countryList $ tuple
+                                    let newList = Main.updateLists countryList $ tuple
+                                    putStr $ printNinjaList $ filter (\n -> name n == name (fst tuple)) (concat newList)
+                                    menu newList
                             else
                                 do
                                     putStrLn "Countries of the ninjas do not match. Try again."
