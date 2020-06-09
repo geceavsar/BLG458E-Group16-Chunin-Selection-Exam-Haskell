@@ -1,18 +1,25 @@
 import System.IO 
 import System.Environment
 import System.Directory  
---import System.Random
 import Data.List  
 import Data.Char
 
 
+{-
+-------------
+This file includes the works we've done to develop the functions for Parts (c) and (d).
+After completing the development phase, we copied all of these functions into cse.hs
+and from now on, the source code of the project is only in cse.hs.
+Please do not try to run this file, probably it won't work.
+-------------
+-}
+
+-- dummy dataset to test the functions
 data Ninja=Ninja{name::String,country::Char,score::Float,
 status::String,exam1::Float,
 exam2::Float,ability1::Float,
 ability2::Float,r::Int} deriving (Eq,Show)
 
-
--- dummy dataset to test the functions
 ninjas::[Ninja]
 
 naruto::Ninja
